@@ -5,9 +5,12 @@
 const int screenWidth = 800;
 const int screenHeight = 600;
 
-const int mode = 0;
+const int maxBalls = 100;
 
-int numBalls = 100;
+const int mode = 1;
+
+
+int numBalls = maxBalls;
 const int minRadius = 5;
 const int maxRadius = 10;
 const int minSpeed = 1;
@@ -16,10 +19,10 @@ const int minLife = 100;
 const int maxLife = 200;
 
 float frameTimeAcc;
-const float eraTimeLimit = 3.0f;
+const float eraTimeLimit = 10.0f;
 bool isInEndGamePause = false;
-float currentPauseTime = .0f;
-float pauseTimeLimit = 2.0f;
+float currentPauseTime = 0.0f;
+float pauseTimeLimit = 1.0f;
 
 const std::vector<Color> myColors =
 {
@@ -33,6 +36,8 @@ std::vector<Ball> myBalls;
 void createBalls()
 {
     //numBalls = GetRandomValue(10, 50);
+    numBalls = maxBalls;
+
     myBalls.clear();
     for (int i = 0; i < numBalls; i++) {
         Ball ball;
@@ -105,15 +110,17 @@ void Update()
 
             if (CheckCollisionCircles(Vector2{ (float)ball1.x, (float)ball1.y }, ball1.radius, Vector2{ (float)ball2.x, (float)ball2.y }, ball2.radius))
             {
-                static const float scaleRad = 0.5f;
+                static const float scaleRad = 0.3f;
 
                 if (mode) {
                     if (ball1.radius > ball2.radius) {
                         myBalls.erase(it2);
+                        numBalls--;
                         ball1.radius += ball2.radius * scaleRad;
                     }
                     else {
                         myBalls.erase(it1);
+                        numBalls--;
                         ball1.radius += ball2.radius * scaleRad;
                     }
                 }
