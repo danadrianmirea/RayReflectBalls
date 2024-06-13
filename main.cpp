@@ -5,7 +5,9 @@
 const int screenWidth = 800;
 const int screenHeight = 600;
 
-int numBalls = 200;
+const int mode = 0;
+
+int numBalls = 100;
 const int minRadius = 5;
 const int maxRadius = 10;
 const int minSpeed = 1;
@@ -14,10 +16,10 @@ const int minLife = 100;
 const int maxLife = 200;
 
 float frameTimeAcc;
-const float eraTimeLimit = 10.0f;
+const float eraTimeLimit = 3.0f;
 bool isInEndGamePause = false;
-float currentPauseTime = 0.0f;
-float pauseTimeLimit = 3.0f;
+float currentPauseTime = .0f;
+float pauseTimeLimit = 2.0f;
 
 const std::vector<Color> myColors =
 {
@@ -59,10 +61,10 @@ void Update()
             return;
         }
         currentPauseTime = 0.0f;
+        frameTimeAcc = 0.0f;
         isInEndGamePause = false;
         createBalls();
     }
-
 
     frameTimeAcc += GetFrameTime();
 
@@ -74,12 +76,14 @@ void Update()
         //createBalls();
     }
 
-    if (myBalls.size() == 1) {
-        if (!isInEndGamePause) {
-            isInEndGamePause = true;
-            currentPauseTime = 0.0f;
-        }
+    if (mode) {
+        if (myBalls.size() == 1) {
+            if (!isInEndGamePause) {
+                isInEndGamePause = true;
+                currentPauseTime = 0.0f;
+            }
 
+        }
     }
 
 
@@ -101,7 +105,6 @@ void Update()
 
             if (CheckCollisionCircles(Vector2{ (float)ball1.x, (float)ball1.y }, ball1.radius, Vector2{ (float)ball2.x, (float)ball2.y }, ball2.radius))
             {
-                static int mode = 1;
                 static const float scaleRad = 0.5f;
 
                 if (mode) {
@@ -123,12 +126,23 @@ void Update()
     }
 }
 
+void DrawDebugInfo() {
+    const int fontSize = 20;
+    const int startX = screenWidth / 20;
+    const int startY = screenHeight / 20;
+
+    DrawText(TextFormat("Balls: %d", numBalls), startX, startY, fontSize, BLACK);
+    DrawText(TextFormat("Time Left: %.2f", eraTimeLimit - frameTimeAcc), startX, startY + fontSize + 10, fontSize, BLACK);
+    DrawText(TextFormat("Is in pause: %d", isInEndGamePause), startX, startY + 2 * (fontSize + 10), fontSize, BLACK);
+    DrawText(TextFormat("Current pause time: %.2f", currentPauseTime), startX, startY + 3 * (fontSize + 10), fontSize, BLACK);
+}
+
 int main()
 {
     Color darkGreen = Color{ 20, 160, 133, 255 };
 
 
-    InitWindow(screenWidth, screenHeight, "Moa");
+    InitWindow(screenWidth, screenHeight, "PhysBall demo");
     SetTargetFPS(60);
 
     createBalls();
@@ -143,9 +157,13 @@ int main()
 
 
         for (auto& ball : myBalls) {
-            ball.Update();
+            if (isInEndGamePause == false) {
+                ball.Update();
+            }
             ball.Draw();
         }
+
+        DrawDebugInfo();
 
         EndDrawing();
     }

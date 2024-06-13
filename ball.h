@@ -8,9 +8,9 @@ class Ball
 public:
     Ball();
 
-    bool operator == (const Ball &other) {
-        if( x != other.x ) return false;
-        if( y != other.y ) return false;
+    bool operator == (const Ball& other) {
+        if (x != other.x) return false;
+        if (y != other.y) return false;
         return true;
     }
 
@@ -36,7 +36,7 @@ public:
         return lifeTime;
     }
 
-    void Reflect() 
+    void Reflect()
     {
         speedX *= -1;
         speedY *= -1;
@@ -49,15 +49,15 @@ public:
         SetColor(myColors[GetRandomValue(0, myColors.size())]);
         int radius = GetRandomValue(minRadius, maxRadius);
         SetRadius(radius);
-        Vector2 randomPos = Vector2{ (float)GetRandomValue(radius*2.0f, screenWidth-radius*2.0f), GetRandomValue(radius*2.0f, screenHeight-radius*2.0f) };
+        Vector2 randomPos = Vector2{ (float)GetRandomValue(radius * 2.0f, screenWidth - radius * 2.0f), GetRandomValue(radius * 2.0f, screenHeight - radius * 2.0f) };
         SetPosition(randomPos);
         int speedX = GetRandomValue(minSpeed, maxSpeed);
         int sign = GetRandomValue(0, 1);
-        if(!sign) speedX *= -1;
+        if (!sign) speedX *= -1;
         int speedY = GetRandomValue(minSpeed, maxSpeed);
         sign = GetRandomValue(0, 1);
-        if(!sign) speedY *= -1;
-        Vector2 dir = Vector2{(float)speedX, (float)speedY};
+        if (!sign) speedY *= -1;
+        Vector2 dir = Vector2{ (float)speedX, (float)speedY };
         SetMoveDirection(dir);
         int life = GetRandomValue(minLife, maxLife);
         SetLifeTime(life);
